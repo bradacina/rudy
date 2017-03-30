@@ -1,8 +1,10 @@
 defmodule RudyPerf do
 
-    require RudyPerfCollector
+    require RudyPerfCollector2
 
-    def start(x, sleep\\0) do
+    def start(x, sleep\\0) when x > 0 do
+        RudyPerfCollector2.start_link
+
         1..x
         |> Enum.map(fn(z) ->
                 {spawn(&start_one/0), z}
@@ -18,14 +20,14 @@ defmodule RudyPerf do
                 :go ->
                     {:ok, client} = Socket.connect("tcp://localhost:8080")
                     :ok = Socket.Stream.send(client,"test")
-                    {:ok, term} = Socket.Stream.recv(client)
+                    {:ok, _} = Socket.Stream.recv(client)
                     :ok = Socket.close(client)
 
-                    RudyPerfCollector.send_result(:ok)
+                    RudyPerfCollector2.add_result(:ok)
             end
         rescue
             x ->
-            RudyPerfCollector.send_result(x)
+            RudyPerfCollector2.add_result(x)
         end
     end
 end
