@@ -12,7 +12,7 @@ defmodule Rudy.Acceptor do
             {:ok, client} -> 
                 accept_callback.(client)
                 loop(state)
-            {:error, reason} -> :ok
+            {:error, _} -> :ok
         end
         
     end
