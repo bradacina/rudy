@@ -2,15 +2,15 @@ defmodule RudyPerf do
 
     require RudyPerfCollector2
 
-    def start(x, sleep\\0) when x > 0 do
+    def start(how_many, sleep\\0) when x > 0 do
         RudyPerfCollector2.start_link
 
-        1..x
-        |> Enum.map(fn(z) ->
-                {spawn(&start_one/0), z}
+        1..how_many
+        |> Enum.map(fn(num) ->
+                {spawn(&start_one/0), num}
             end)
-        |> Enum.each(fn({y,z}) ->
-                Process.send_after(y, :go, z*sleep) 
+        |> Enum.each(fn({pid,num}) ->
+                Process.send_after(pid, :go, num * sleep) 
             end)
     end
 
